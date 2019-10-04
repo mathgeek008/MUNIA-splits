@@ -44,9 +44,9 @@ namespace MUNIA.Forms {
 			ConfigManager.ControllerMappings.ListChanged += (o, args) => ScheduleBuildMenu();
 
 			Application.Idle += OnApplicationOnIdle;
-			if (!_skipUpdateCheck)
-				PerformUpdateCheck();
-			else
+			//if (!_skipUpdateCheck)
+				//PerformUpdateCheck();
+			//else
 				UpdateStatus("not checking for newer version", 100);
 		}
 
