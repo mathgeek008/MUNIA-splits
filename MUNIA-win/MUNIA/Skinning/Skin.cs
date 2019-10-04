@@ -41,7 +41,7 @@ namespace MUNIA.Skinning {
         private bool PrevToggleButtonState = false;
 
         private readonly String windowName = "LiveSplit";
-        private readonly String splitKey = " "; // The space key, in this case.
+        private readonly String splitKey = "{F12}"; // The space key, in this case.
 
         int splitCombo = 0; // For autoSplit() method
 
