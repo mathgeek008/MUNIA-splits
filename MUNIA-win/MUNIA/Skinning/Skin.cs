@@ -105,13 +105,15 @@ namespace MUNIA.Skinning {
             var bButtonState = State.Buttons[1];
             var startButtonState = State.Buttons[4];
 
-            if (bButtonState) // If the B button is pressed, reset the combo to 0.
+            if (bButtonState || axisPos > -upThreshold || timer.ElapsedMilliseconds > 1000) // Conditions for a reset
                 splitCombo = 0;
 
             if (startButtonState && startButtonState != PrevStartButtonState) // Leading edge of a start button press
             {
                 if (splitCombo == 0)
+                {
                     splitCombo = 1;
+                }
                 else
                     splitCombo = 0;
             }
@@ -138,8 +140,10 @@ namespace MUNIA.Skinning {
                 }
 
             if (axisPos >= downThreshold && splitCombo == 2) // Neutral Input
+            {
                 splitCombo++;
-              
+            }
+
             if (aButtonState)
             {
                 if (splitCombo == 4)
