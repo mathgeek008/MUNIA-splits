@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 using System;
 using System.Runtime.InteropServices;
 using MUNIA.Controllers;
@@ -41,7 +42,9 @@ namespace MUNIA.Skinning {
         private bool PrevToggleButtonState = false;
 
         private readonly String windowName = "LiveSplit";
-        private readonly String splitKey = "{F12}"; // The space key, in this case.
+        private readonly String splitKey = "{F12}"; // Default split key
+
+        private readonly Stopwatch timer = new Stopwatch();
 
         int splitCombo = 0; // For autoSplit() method
 
@@ -69,8 +72,8 @@ namespace MUNIA.Skinning {
 
             if (autoSplitState)
                 AutoSplit();
-            //else
-                ManualSplit(); // No else statement so that y always splits
+
+            ManualSplit(); // Always be able to press Y to split
         }
 
 
@@ -95,15 +98,12 @@ namespace MUNIA.Skinning {
         private void AutoSplit()
         {
             double axisPos = State.Axes[1]; // Vertical reading of the analog stick
-            double upThreshold = -0.39; // Minimum experimental value to go up
-            double downThreshold = -0.23; // Minimum experimental value to stop going up
+            double upThreshold = -0.55; // Minimum experimental value to go up
+            double downThreshold = -0.32; // Minimum experimental value to stop going up
 
             var aButtonState = State.Buttons[0];
             var bButtonState = State.Buttons[1];
             var startButtonState = State.Buttons[4];
-
-            //SendKeys.Send(splitCombo.ToString());
-            //String sAxisPos = axisPos.ToString();
 
             if (bButtonState) // If the B button is pressed, reset the combo to 0.
                 splitCombo = 0;
@@ -116,13 +116,30 @@ namespace MUNIA.Skinning {
                     splitCombo = 0;
             }
 
-            if (axisPos <= upThreshold)
-                if (splitCombo == 1 || splitCombo == 3)
+            if (axisPos <= upThreshold) // Check for up input
+                if (splitCombo == 1)
+                {
                     splitCombo++;
+                    timer.Start();
+                }
+                else if (splitCombo == 3)
+                {
+                    if (timer.ElapsedMilliseconds >= 180) // 100% safely assume (unless lag) that you are over "Select Stage"
+                    {
+                        splitCombo++;
+                        timer.Reset();
+                    }
+                    else if (timer.ElapsedMilliseconds >= 156 && timer.ElapsedMilliseconds <= 179) // Unpredictable it seems
+                    {
+                        //TODO Figure out what causes this to sometimes go to stage select and other times exit game
+                        splitCombo++;
+                        timer.Reset();
+                    }
+                }
 
-            if (axisPos >= downThreshold && splitCombo == 2)
-                splitCombo = 3;
-
+            if (axisPos >= downThreshold && splitCombo == 2) // Neutral Input
+                splitCombo++;
+              
             if (aButtonState)
             {
                 if (splitCombo == 4)
@@ -133,6 +150,9 @@ namespace MUNIA.Skinning {
 
                 splitCombo = 0;
             }
+
+            if (splitCombo == 0) // Reset timer if menu is closed out
+                timer.Reset();
 
             PrevStartButtonState = startButtonState;
         }
