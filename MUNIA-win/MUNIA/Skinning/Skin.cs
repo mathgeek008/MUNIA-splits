@@ -67,10 +67,10 @@ namespace MUNIA.Skinning {
 
             PrevToggleButtonState = toggleButtonState;
 
-            if (!autoSplitState)
-                ManualSplit();
-            else
+            if (autoSplitState)
                 AutoSplit();
+            //else
+                ManualSplit(); // No else statement so that y always splits
         }
 
 
