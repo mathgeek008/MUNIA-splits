@@ -47,7 +47,7 @@ namespace MUNIA.Forms {
 			//if (!_skipUpdateCheck)
 				//PerformUpdateCheck();
 			//else
-				UpdateStatus("not checking for newer version", 100);
+				//UpdateStatus("not checking for newer version", 100);
 		}
 
 		private Task _buildMenuTask;
@@ -359,6 +359,11 @@ namespace MUNIA.Forms {
 
             ConfigManager.ActiveSkin.HandleSplit();
 
+            if (ConfigManager.ActiveSkin.isAuto())
+                UpdateStatus("ENABLED", 100);
+            else
+                UpdateStatus("DISABLED", 100);
+
             glControl.MakeCurrent();
 			GL.ClearColor(Color.FromArgb(0, ConfigManager.BackgroundColor));
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -467,7 +472,7 @@ namespace MUNIA.Forms {
 				return;
 			}
 
-			lblStatus.Text = "Status: " + text;
+			lblStatus.Text = "Auto Splitting: " + text;
 			if (progressBarValue < 100)
 				// forces 'instant update'
 				pbProgress.Value = progressBarValue + 1;

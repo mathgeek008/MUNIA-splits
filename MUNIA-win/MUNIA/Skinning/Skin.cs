@@ -57,15 +57,9 @@ namespace MUNIA.Skinning {
             if (toggleButtonState && !PrevToggleButtonState) // Check for leading edge of Z button press
             {
                 if (autoSplitState)
-                {
                     autoSplitState = false;
-                    MessageBox.Show("Auto Splitting Disabled");
-                } else
-                {
+                else
                     autoSplitState = true;
-                    MessageBox.Show("Auto Splitting Enabled");
-                }
-
             }
 
             PrevToggleButtonState = toggleButtonState;
@@ -74,6 +68,13 @@ namespace MUNIA.Skinning {
                 AutoSplit();
 
             ManualSplit(); // Always be able to press Y to split
+        }
+
+        public Boolean isAuto()
+        {
+            if (autoSplitState)
+                return true;
+            return false;
         }
 
 
